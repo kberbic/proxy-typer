@@ -1,11 +1,13 @@
 const AsyncFunction = (async () => {}).constructor;
 
 const typeErrorMessage = (name, type, tn) => {
-  const typeName = (tn || type.type.name || type.type[0].name);
-  let modelName = name;
-  if (!Number.isNaN(parseInt(modelName))) modelName = `[${modelName}]`;
+    const typeName = (tn || type.type.name || type.type[0].name);
+    let propName = name;
+    if (!Number.isNaN(parseInt(propName))) propName = `[${propName}]`;
 
-  return `${type.modelName + modelName} need to be ${typeName}`;
+    return type.modelName.endsWith(propName) ?
+        `${type.modelName} need to be ${typeName}` :
+        `${type.modelName + propName} need to be ${typeName}`;
 };
 
 const typer = ({
@@ -89,7 +91,8 @@ const modelHandler = {
     const propTypes = target[_propTypes] || target.constructor[_propTypes];
     const t = propTypes[n] || propTypes;
 
-    if (!target[n]) typer({ v, n, t });
+    // if (!target[n]) TODO: K.B Need to find the way to check empty array
+    typer({ v, n, t });
 
     target[n] = v;
 

@@ -112,8 +112,31 @@ describe('create.test.model', async () => {
 
     });
 
-    it('create array with proxy typer', async () => {
+    it('create model with array prop and try to attach new array list', async () => {
+        class InnerModel{
+            constructor(input = {}){
+                Object.assign(this, input);
+            }
+        }
+
+        InnerModel.propTypes = {
+            value: {type: String, required: true},
+            length: {type: Number, required: true},
+            values: {type: [Number], required: true}
+        };
+
+        const TestModel = ProxyTyper(InnerModel);
+
+        const test = new TestModel({value: "test", length: 4, values: [50, 45]});
+        test.value = "asd";
+        test.values.push(0);
+        test.values.push(45);
+        test.values[1] = 45;
+        test.values = [45,56];
+    });
+
+    /*it('create array with proxy typer', async () => {
         let array = ProxyTyper([], String);
         array.push("test")
-    });
+    });*/
 });
