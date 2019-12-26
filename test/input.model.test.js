@@ -135,8 +135,34 @@ describe('create.test.model', async () => {
         test.values = [45,56];
     });
 
-    /*it('create array with proxy typer', async () => {
-        let array = ProxyTyper([], String);
-        array.push("test")
-    });*/
+    it('create test model to test functions', async () => {
+        class Test{
+            constructor(value, number){
+                this.value = value;
+                this.number = number;
+            }
+
+            setValue(val){
+                this.number=val;
+                return this.number;
+            }
+
+            getValue(){
+                return this.number.toString();
+            }
+        }
+
+        Test.propTypes = {
+            value: String,
+            number: Number,
+            setValue: {type: Function, args:[{type: Number}]},
+            getValue: {type: Function, return: String}
+        }
+
+        const TestModel = ProxyTyper(Test);
+        const test = new TestModel("test", 45);
+        test.setValue(3);
+        test.getValue();
+
+    });
 });
