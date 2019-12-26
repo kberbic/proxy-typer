@@ -1,6 +1,6 @@
 # proxy-typer
 
-Runtime javascript prop types checker for user defined classes. \
+Runtime javascript proptypes check, for user defined classes. \
 Implemented using ES6 features (Proxy and Symbol)
 
 ## Install
