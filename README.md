@@ -1,6 +1,6 @@
 # proxy-typer
 
-Runtime javascript proptypes check, for user defined classes. \
+Runtime javascript proptypes check, only for user defined classes. \
 Implemented using ES6 features (Proxy and Symbol)
 
 ## Install
@@ -10,6 +10,7 @@ Implemented using ES6 features (Proxy and Symbol)
    - Number
    - String
    - Date
+   - Object
    - Function
    - AsyncFunction
    - Array
@@ -42,19 +43,19 @@ Implemented using ES6 features (Proxy and Symbol)
     
     }
     
-    Input.propTypes = {
+    UserDefined.propTypes = {
         value: {type: Number, required: false},
         values: [Number],
         setValue: {type: AsyncFunction, args: [{type: Number}, {type: String, required: false}]},
-        getValue: {type: Function},
+        getValue: {type: Function, return: Object},
         text: String,
         date: {type: Date, required: false},
         input: {type: Input, required: false},
         obj: {type: Object, required: false}
     };
     
-    module.exports = ProxyTyper(Input);
+    module.exports = ProxyTyper(UserDefined);
 ## Example
     TO DO
 ## TO DO
-   - Add support for static props and functions
+   - Add support for static props and static functions
