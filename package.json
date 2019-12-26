@@ -1,7 +1,7 @@
 {
   "name": "proxy-typer",
-  "version": "0.0.4",
-  "description": "Runtime javascript prop types checker for user defined classes",
+  "version": "0.0.5",
+  "description": "Runtime javascript proptypes check, for user defined classes",
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test --opts ./mocha.opts",
