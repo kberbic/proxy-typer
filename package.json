@@ -1,0 +1,15 @@
+{
+  "name": "proxy-typer",
+  "version": "0.0.1",
+  "description": "Runtime javascript prop types checker for user defined classes",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ./test --opts ./mocha.opts"
+  },
+  "author": "Kenan Berbic",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2"
+  }
+}
