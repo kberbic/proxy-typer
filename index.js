@@ -1,13 +1,13 @@
 const AsyncFunction = (async () => {}).constructor;
 
 const typeErrorMessage = (name, type, tn) => {
-    const typeName = (tn || type.type.name || type.type[0].name);
-    let propName = name;
-    if (!Number.isNaN(parseInt(propName))) propName = `[${propName}]`;
+  const typeName = (tn || type.type.name || type.type[0].name);
+  let propName = name;
+  if (!Number.isNaN(parseInt(propName))) propName = `[${propName}]`;
 
-    return type.modelName.endsWith(propName) ?
-        `${type.modelName} need to be ${typeName}` :
-        `${type.modelName + propName} need to be ${typeName}`;
+  return type.modelName.endsWith(propName)
+    ? `${type.modelName} need to be ${typeName}`
+    : `${type.modelName + propName} need to be ${typeName}`;
 };
 
 const typer = ({
