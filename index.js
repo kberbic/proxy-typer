@@ -65,23 +65,24 @@ const modelHandler = {
     return new Proxy(output, modelHandler);
   },
   apply(func, target, args) {
-      const type = func[_propTypes] || func.constructor[_propTypes];
-      if (type.args)
-          type.args
-              .forEach((p, i) => typer({v: args[i], t: p, n: `${func.name} argument ${i}`}));
+    const type = func[_propTypes] || func.constructor[_propTypes];
+    if (type.args) {
+      type.args
+        .forEach((p, i) => typer({ v: args[i], t: p, n: `${func.name} argument ${i}` }));
+    }
 
-      const output = func.apply(target, args);
-      if (type.return && type.return.required && (output === null || output === undefined)) throw new TypeError(`Missing return value for function '${nameFormating(target, func)}'`);
-      else if (output === null || output === undefined || !type.return) return output;
+    const output = func.apply(target, args);
+    if (type.return && type.return.required && (output === null || output === undefined)) throw new TypeError(`Missing return value for function '${nameFormating(target, func)}'`);
+    else if (output === null || output === undefined || !type.return) return output;
 
-      if (output.constructor === Promise) {
-          return output.then((v) => {
-              typer({v, t: type.return, n: `${func.name} return`});
-          });
-      }
-      typer({v: output, t: type.return, n: `${func.name} return`});
+    if (output.constructor === Promise) {
+      return output.then((v) => {
+        typer({ v, t: type.return, n: `${func.name} return` });
+      });
+    }
+    typer({ v: output, t: type.return, n: `${func.name} return` });
 
-      return output;
+    return output;
   },
   set(target, n, v) {
     if (n === _propTypes) {
