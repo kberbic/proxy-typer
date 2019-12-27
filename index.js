@@ -13,21 +13,21 @@ const typeErrorMessage = (name, type, tn) => {
 const typer = ({
   v, n, t, tn,
 }) => {
-  if (Array.isArray(t.type)) {
-    (v || [undefined]).map((iv) => typer({
-      v: iv, n, t: t.type[0], tn: `Array[${t.type[0].type.name}]`,
-    }));
-  }
+    if (Array.isArray(t.type)) {
+        (v || [undefined]).map((iv) => typer({
+            v: iv, n, t: t.type[0], tn: `Array[${t.type[0].type.name}]`,
+        }));
+    }
 
-  if (!t.required && (v === null || v === undefined)) return v;
+    if (!t.required && (v === null || v === undefined)) return v;
 
-  if (t.required && (v === null || v === undefined || v === '' || Number.isNaN(v))) throw new TypeError(typeErrorMessage(n, t, tn));
+    if (t.required && (v === null || v === undefined || v === '' || Number.isNaN(v))) throw new TypeError(typeErrorMessage(n, t, tn));
 
-  if (v.constructor === Array) {
-    if (!Array.isArray(t.type)) throw new TypeError(typeErrorMessage(n, t, tn));
-  } else if (v.constructor.name !== t.type.name) throw new TypeError(typeErrorMessage(n, t, tn));
+    if (v.constructor === Array) {
+        if (!Array.isArray(t.type)) throw new TypeError(typeErrorMessage(n, t, tn));
+    } else if (v.constructor.name !== t.type.name) throw new TypeError(typeErrorMessage(n, t, tn));
 
-  return v;
+    return v;
 };
 
 const nameFormating = (...args) => {
@@ -66,9 +66,17 @@ const modelHandler = {
   },
   apply(func, target, args) {
     const type = func[_propTypes] || func.constructor[_propTypes];
+
+    if(type.cast)
+      args = type.cast(...args);
+
     if (type.args) {
-      type.args
-        .forEach((p, i) => typer({ v: args[i], t: p, n: `${func.name} argument ${i}` }));
+        type.args
+            .forEach((p, i) => {
+                if (p.cast)
+                    args[i] = p.cast(args[i]);
+                typer({v: args[i], t: p, n: `${func.name} argument ${i}`});
+            });
     }
 
     const output = func.apply(target, args);
@@ -83,59 +91,64 @@ const modelHandler = {
     return output;
   },
   set(target, n, v) {
-    if (n === _propTypes) {
-      target.constructor[n] = v;
+      if (n === _propTypes) {
+          target.constructor[n] = v;
+          return true;
+      }
+
+      const propTypes = target[_propTypes] || target.constructor[_propTypes];
+      const t = propTypes[n] || propTypes;
+
+      if (t.cast)
+          v = t.cast(v);
+
+      // if (!target[n]) TODO: K.B Need to find the way to check empty array
+      typer({v, n, t});
+
+      target[n] = v;
+
       return true;
-    }
-
-    const propTypes = target[_propTypes] || target.constructor[_propTypes];
-    const t = propTypes[n] || propTypes;
-
-    // if (!target[n]) TODO: K.B Need to find the way to check empty array
-    typer({ v, n, t });
-
-    target[n] = v;
-
-    return true;
-  },
+  }
 };
 
 const parsing = (modelName, propTypes, type, req) => {
-  const required = req !== false;
-  const propKeys = Object.keys(propTypes);
+    const required = req !== false;
+    const propKeys = Object.keys(propTypes);
 
-  let types = type === Array ? [] : {};
-  if (propKeys.length) {
-    propKeys.forEach((key) => {
-      types[key] = { type: null, required, modelName };
-      const value = propTypes[key];
-      const keys = Object.keys(value);
-      if (value.constructor === Object && keys.length) {
-        if (value.type && (Array.isArray(value.type) || value.type.constructor === Function)) {
-          const isArray = Array.isArray(value.type);
-          types[key].required = value.required !== false;
-          types[key].type = isArray
-            ? parsing(modelName, value.type, Array, types[key].required)
-            : value.type;
-          if (value.args) types[key].args = parsing(modelName, value.args, value.args.constructor);
-          if (value.return) types[key].return = { type: value.return, required, modelName };
-        } else if (value.constructor === Array) {
-          types[key].type = parsing(modelName, value, value.constructor);
-        } else {
-          throw new TypeError(`Unknown type for prop '${key}'`);
-        }
-      } else if (value.constructor === Function) {
-        types[key] = { type: value, required, modelName };
-      } else if (value.constructor === Array) {
-        types[key].type = parsing(modelName, value, value.constructor);
-      } else {
-        throw new TypeError(`Unknown type for prop '${key}'`);
-      }
-    });
-  } else {
-    types = { type: propTypes, modelName, required: true };
-  }
-  return types;
+    let types = type === Array ? [] : {};
+    if (propKeys.length) {
+        propKeys.forEach((key) => {
+            types[key] = {type: null, cast: null, required, modelName};
+            const value = propTypes[key];
+            const keys = Object.keys(value);
+            if (value.constructor === Object && keys.length) {
+                if (value.type && (Array.isArray(value.type) || value.type.constructor === Function)) {
+                    const isArray = Array.isArray(value.type);
+                    types[key].required = value.required !== false;
+                    types[key].type = isArray
+                        ? parsing(modelName, value.type, Array, types[key].required)
+                        : value.type;
+                    if (value.args) types[key].args = parsing(modelName, value.args, value.args.constructor);
+                    if (value.return) types[key].return = {type: value.return, required, modelName};
+                    if (value.cast && value.cast.constructor === Function) types[key].cast = value.cast;
+                } else if (value.constructor === Array) {
+                    types[key].type = parsing(modelName, value, value.constructor);
+                } else {
+                    throw new TypeError(`Unknown type for prop '${key}'`);
+                }
+            } else if (value.constructor === Function) {
+                types[key] = {type: value, required, modelName};
+                if (value.cast && value.cast.constructor === Function) types[key].cast = value.cast;
+            } else if (value.constructor === Array) {
+                types[key].type = parsing(modelName, value, value.constructor);
+            } else {
+                throw new TypeError(`Unknown type for prop '${key}'`);
+            }
+        });
+    } else {
+        types = {type: propTypes, modelName, required: true};
+    }
+    return types;
 };
 
 const Model = (model, directType) => {

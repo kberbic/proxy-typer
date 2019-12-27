@@ -156,13 +156,13 @@ describe('create.test.model', async () => {
         Test.propTypes = {
             value: String, // is equal to {type: String}
             number: Number, // if prop isn't required then {type: Number, required: false}
-            setValue: {type: Function, args: [{type: Number}]}, // if function need to return value then add {return: [Type]}
+            setValue: {type: Function, args: [{type: Number, cast: parseInt}]}, // if function need to return value then add {return: [Type]}
             getValue: {type: AsyncFunction, return: String}
         };
 
         const TestModel = ProxyTyper(Test);
         const test = new TestModel("test", 45);
-        test.setValue(3);
+        test.setValue("34");
         test.getValue();
 
     });
