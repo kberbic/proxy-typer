@@ -1,7 +1,7 @@
 # proxy-typer
 
 Runtime javascript proptypes check, only for user defined classes. \
-Implemented using ES6 features (Proxy and Symbol)
+Implemented using ES6 features (Proxy and Symbol) >=8.0.0
 
 ## Install
     npm install proxy-typer --save

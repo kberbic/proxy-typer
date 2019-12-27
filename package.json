@@ -1,6 +1,6 @@
 {
   "name": "proxy-typer",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Runtime javascript proptypes check, for user defined classes",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,16 @@
     "lint:fix": "eslint --fix index.js"
   },
   "author": "Kenan Berbic",
+  "keywords": [
+    "proxy",
+    "types",
+    "prop types",
+    "type check",
+    "user defined classes"
+  ],
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",
