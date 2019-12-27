@@ -19,42 +19,34 @@ Implemented using ES6 features (Proxy and Symbol)
 ## Description
 
 ## How to use
-    const {ProxyTyper, AsyncFunction} = require("proxy-typer");
-    
-    class UserDefined{
-        this.#v1 = null;
-        constructor(input = {}) {
-            //Object.assign(this, input); 
-            this.value = input.value;
-            this.values = input.values;
-            this.text = input.text;
-            this.date = input.date;
-            this.input = input.input;
-            this.obj = input.obj;
+    var {ProxyTyper, AsyncFunction} = require("proxy-typer")
+    class Test{
+        constructor(value, number){
+            this.value = value;
+            this.number = number;
         }
-    
-        async setValue(v1, v2) {
-            this.#v1 = {v1, v2};
+        
+        setValue(val){
+            this.text=val;
+            return this.text;
         }
-    
-        getValue() {
-            return this.#v1
+        
+        async getValue(){
+            return this.text;
         }
-    
     }
     
-    UserDefined.propTypes = {
-        value: {type: Number, required: false},
-        values: [Number],
-        setValue: {type: AsyncFunction, args: [{type: Number}, {type: String, required: false}]},
-        getValue: {type: Function, return: Object},
-        text: String,
-        date: {type: Date, required: false},
-        input: {type: Input, required: false},
-        obj: {type: Object, required: false}
-    };
+    Test.propTypes = {
+        value: String,
+        number: Number,
+        setValue: {type: Function, args:[{type: Number}]},
+        getValue: {type: AsyncFunction, return: String}
+    }
     
-    module.exports = ProxyTyper(UserDefined);
+    const TestModel = ProxyTyper(Test);
+    const test = new TestModel("test", 45);
+    test.setValue(3)
+    test.getValue()
 ## Example
     TO DO
 ## TO DO

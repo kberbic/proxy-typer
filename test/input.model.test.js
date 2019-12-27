@@ -1,5 +1,5 @@
 const {expect} = require("chai");
-const {ProxyTyper} = require("../index");
+const {ProxyTyper, AsyncFunction} = require("../index");
 
 class Model{
     value;
@@ -147,7 +147,7 @@ describe('create.test.model', async () => {
                 return this.number;
             }
 
-            getValue(){
+            async getValue(){
                 return this.number.toString();
             }
         }
@@ -156,7 +156,7 @@ describe('create.test.model', async () => {
             value: String,
             number: Number,
             setValue: {type: Function, args:[{type: Number}]},
-            getValue: {type: Function, return: String}
+            getValue: {type: AsyncFunction, return: String}
         }
 
         const TestModel = ProxyTyper(Test);
