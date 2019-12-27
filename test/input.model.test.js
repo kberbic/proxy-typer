@@ -162,7 +162,39 @@ describe('create.test.model', async () => {
 
         const TestModel = ProxyTyper(Test);
         const test = new TestModel("test", 45);
-        test.setValue("34");
+        test.setValue(34);
+        test.getValue();
+
+    });
+
+    it('create test model to test cast function', async () => {
+        class Test {
+            constructor(value, number) {
+                this.value = value;
+                this.number = number;
+            }
+
+            setValue(val, val2) {
+                return {val, val2}
+            }
+
+            async getValue() {
+                return this.number.toString();
+            }
+        }
+
+        Test.propTypes = {
+            value: {type: String, cast: (v)=> v ? v.toString() : v}, // is equal to {type: String}
+            number: Number, // if prop isn't required then {type: Number, required: false}
+            setValue: {type: Function, args: [Number, String], return: Object, cast: (v1,v2)=> [Number(v1), String(v2)]}, // if function need to return value then add {return: [Type]}
+            getValue: {type: AsyncFunction, return: String}
+        };
+
+        const TestModel = ProxyTyper(Test);
+        const test = new TestModel("test", 45);
+
+        test.value = null;
+        test.setValue("35","w45");
         test.getValue();
 
     });

@@ -40,6 +40,7 @@ const _propTypes = Symbol('__propTypes__');
 const modelHandler = {
   construct(target, args, newTarget) {
     const propTypes = target[_propTypes] || target.constructor[_propTypes];
+
     const output = Reflect.construct(target, args, newTarget);
 
     if (propTypes) {
