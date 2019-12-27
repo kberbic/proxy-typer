@@ -76,9 +76,7 @@ const modelHandler = {
     else if (output === null || output === undefined || !type.return) return output;
 
     if (output.constructor === Promise) {
-      return output.then((v) => {
-        typer({ v, t: type.return, n: `${func.name} return` });
-      });
+      return output.then((v) => typer({ v, t: type.return, n: `${func.name} return` }));
     }
     typer({ v: output, t: type.return, n: `${func.name} return` });
 

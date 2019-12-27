@@ -1,6 +1,6 @@
 {
   "name": "proxy-typer",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Runtime javascript proptypes check, for user defined classes",
   "main": "index.js",
   "scripts": {

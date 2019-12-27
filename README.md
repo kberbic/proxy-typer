@@ -19,34 +19,33 @@ Implemented using ES6 features (Proxy and Symbol) >=8.0.0
 ## Description
 
 ## How to use
-    var {ProxyTyper, AsyncFunction} = require("proxy-typer")
-    class Test{
-        constructor(value, number){
-            this.value = value;
-            this.number = number;
+    class Test {
+            constructor(value, number) {
+                this.value = value;
+                this.number = number;
+            }
+
+            setValue(val) {
+                this.number = val;
+                return this.number;
+            }
+
+            async getValue() {
+                return this.number.toString();
+            }
         }
-        
-        setValue(val){
-            this.text=val;
-            return this.text;
-        }
-        
-        async getValue(){
-            return this.text;
-        }
-    }
-    
-    Test.propTypes = {
-        value: String,
-        number: Number,
-        setValue: {type: Function, args:[{type: Number}]},
-        getValue: {type: AsyncFunction, return: String}
-    }
-    
-    const TestModel = ProxyTyper(Test);
-    const test = new TestModel("test", 45);
-    test.setValue(3)
-    test.getValue()
+
+        Test.propTypes = {
+            value: String, // is same like {type: String}
+            number: Number, // if prop isn't required then {type: Number, required: false}
+            setValue: {type: Function, args: [{type: Number}]}, // if function need to return value then add {return: [Type]}
+            getValue: {type: AsyncFunction, return: String}
+        };
+
+        const TestModel = ProxyTyper(Test);
+        const test = new TestModel("test", 45);
+        test.setValue(3);
+        test.getValue();
 ## Example
     TO DO
 ## TO DO

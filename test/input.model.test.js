@@ -38,9 +38,10 @@ describe('create.test.model', async () => {
     });
 
     it('create model with one function required field', async () => {
-        class ModelTest{
+        class ModelTest {
             value;
-            constructor(){
+
+            constructor() {
 
             }
 
@@ -52,7 +53,7 @@ describe('create.test.model', async () => {
 
         ModelTest.propTypes = {
             value: {type: String, required: false},
-            setValue: {type: Function, args:[{type: String}], return: String}
+            setValue: {type: Function, args: [{type: String}], return: String}
         };
 
         const TestModel = ProxyTyper(ModelTest);
@@ -63,8 +64,8 @@ describe('create.test.model', async () => {
     });
 
     it('create model with array prop', async () => {
-        class InnerModel{
-            constructor(input = {}){
+        class InnerModel {
+            constructor(input = {}) {
                 Object.assign(this, input);
             }
         }
@@ -86,8 +87,8 @@ describe('create.test.model', async () => {
     });
 
     it('create model with array prop and try adding string in array', async () => {
-        class InnerModel{
-            constructor(input = {}){
+        class InnerModel {
+            constructor(input = {}) {
                 Object.assign(this, input);
             }
         }
@@ -104,17 +105,17 @@ describe('create.test.model', async () => {
         expect(test.value).to.equal("test");
         expect(test.values.length).to.equal(1);
         expect(test.length).to.equal(4);
-        try{
+        try {
             test.values.push("test");
-        }catch (ex){
+        } catch (ex) {
             expect(ex.message).to.equal("InnerModel->values[1] need to be Number");
         }
 
     });
 
     it('create model with array prop and try to attach new array list', async () => {
-        class InnerModel{
-            constructor(input = {}){
+        class InnerModel {
+            constructor(input = {}) {
                 Object.assign(this, input);
             }
         }
@@ -132,32 +133,32 @@ describe('create.test.model', async () => {
         test.values.push(0);
         test.values.push(45);
         test.values[1] = 45;
-        test.values = [45,56];
+        test.values = [45, 56];
     });
 
     it('create test model to test functions', async () => {
-        class Test{
-            constructor(value, number){
+        class Test {
+            constructor(value, number) {
                 this.value = value;
                 this.number = number;
             }
 
-            setValue(val){
-                this.number=val;
+            setValue(val) {
+                this.number = val;
                 return this.number;
             }
 
-            async getValue(){
+            async getValue() {
                 return this.number.toString();
             }
         }
 
         Test.propTypes = {
-            value: String,
-            number: Number,
-            setValue: {type: Function, args:[{type: Number}]},
+            value: String, // is equal to {type: String}
+            number: Number, // if prop isn't required then {type: Number, required: false}
+            setValue: {type: Function, args: [{type: Number}]}, // if function need to return value then add {return: [Type]}
             getValue: {type: AsyncFunction, return: String}
-        }
+        };
 
         const TestModel = ProxyTyper(Test);
         const test = new TestModel("test", 45);
