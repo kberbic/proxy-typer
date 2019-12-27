@@ -19,7 +19,7 @@ Implemented using ES6 features (Proxy and Symbol) >=8.0.0
     
 ## Description
 
-### How to set types on props
+### How to set type on prop
 
 ##### Value need to be number and it's required
     Model.propTypes = {
@@ -37,7 +37,7 @@ Implemented using ES6 features (Proxy and Symbol) >=8.0.0
         exampleProp: {type: Number, required: true, cast: parseInt} 
     };
     
-### How to set types on functions
+### How to set type on function
 
 ##### Need to be function, first argument need to be number [required], second argument need to be string [required] and function need to return some object 
     Model.propTypes = {
