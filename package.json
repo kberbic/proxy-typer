@@ -1,6 +1,6 @@
 {
   "name": "proxy-typer",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Runtime javascript proptypes check, for user defined classes",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,10 @@
     "type check",
     "user defined classes"
   ],
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/kberbic/proxy-typer.git"
+  },
   "engines": {
     "node": ">=8.0.0"
   },
