@@ -46,19 +46,26 @@ const modelHandler = {
     if (propTypes) {
       Object.keys(propTypes).forEach((n) => {
         const t = propTypes[n];
-        const v = output[n];
-        typer({ v, t, n });
-
         if (t.type === Function || t.type === AsyncFunction) {
+            typer({v: output[n], t, n});
           const type = propTypes[n];
           type.modelName += n;
           output[n][_propTypes] = type;
           output[n] = new Proxy(output[n], modelHandler);
         } else if (Array.isArray(t.type)) {
+            if (t.cast)
+                output[n] = t.cast(output[n]);
+
+          typer({v: output[n], t, n});
           const type = propTypes[n].type[0];
           type.modelName += n;
           output[n][_propTypes] = type;
           output[n] = new Proxy(output[n], modelHandler);
+        }else {
+            if (t.cast)
+                output[n] = t.cast(output[n]);
+
+            typer({v: output[n], t, n});
         }
       });
     }
