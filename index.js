@@ -128,9 +128,9 @@ const parsing = (modelName, propTypes, type, req) => {
           types[key].type = isArray
             ? parsing(modelName, value.type, Array, types[key].required)
             : value.type;
-          if (value.args) types[key].args = parsing(modelName, value.args, value.args.constructor);
-          if (value.return) types[key].return = { type: value.return, required, modelName };
-          if (value.cast && value.cast.constructor === Function) types[key].cast = value.cast;
+          if (value.type && value.args) types[key].args = parsing(modelName, value.args, value.args.constructor);
+          if (value.type && value.return) types[key].return = { type: value.return, required, modelName };
+          if (value.type && value.cast && value.cast.constructor === Function) types[key].cast = value.cast;
         } else if (value.constructor === Array) {
           types[key].type = parsing(modelName, value, value.constructor);
         } else {
@@ -138,7 +138,6 @@ const parsing = (modelName, propTypes, type, req) => {
         }
       } else if (value.constructor === Function) {
         types[key] = { type: value, required, modelName };
-        if (value.cast && value.cast.constructor === Function) types[key].cast = value.cast;
       } else if (value.constructor === Array) {
         types[key].type = parsing(modelName, value, value.constructor);
       } else {

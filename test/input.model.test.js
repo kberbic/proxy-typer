@@ -184,7 +184,7 @@ describe('create.test.model', async () => {
         }
 
         Test.propTypes = {
-            value: {type: String, cast: (v)=> v ? v.toString() : v}, // is equal to {type: String}
+            value: {type: String, cast: (v)=> v ? v.toString() : v, required: false}, // is equal to {type: String}
             number: Number, // if prop isn't required then {type: Number, required: false}
             setValue: {type: Function, args: [Number, String], return: Object, cast: (v1,v2)=> [Number(v1), String(v2)]}, // if function need to return value then add {return: [Type]}
             getValue: {type: AsyncFunction, return: String}
